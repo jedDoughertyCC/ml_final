@@ -14,6 +14,27 @@ dollar_converter <- function(x){
   return(converted)
 }
 
+#given a column name, creates columns for all subsets of column
+get_uniques <- function(x){
+  names_all<- x
+  names_all <- paste(names_all,collapse = ", ")
+  names_df <- data.frame(strsplit(names_all,", "))
+  names(names_df) <- "names"
+  unique_names <- unique(names_df$names)
+  return(unique_names)
+}
+
+#gets boolean for each column
+add_columns <- function(y,uniques,df){
+  cframe <- df
+  for(i in 1:length(uniques)) {
+    cols <- length(colnames(cframe))
+    cframe <- cbind(cframe,
+                              grepl(uniques[i],cframe[, y]))
+    colnames(cframe)[cols+1] <- gsub(" ","_",uniques[i])
+  }
+  return(cframe)
+}
 #converts the text of the budget to raw numbers
 prod_numbers$budget_raw <- dollar_converter(prod_numbers$Production.Budget)
 
@@ -54,25 +75,6 @@ movies_imdb_prod$Genre <- gsub("N/A","Not Available",movies_imdb_prod$Genre)
 # Finding the list of unique names
 #gets list of all names into a column
 
-get_uniques <- function(x){
-  names_all<- x
-  names_all <- paste(names_all,collapse = ", ")
-  names_df <- data.frame(strsplit(names_all,", "))
-  names(names_df) <- "names"
-  unique_names <- unique(names_df$names)
-  return(unique_names)
-}
-
-add_columns <- function(y,uniques,df){
-  cframe <- df
-  for(i in 1:length(uniques)) {
-    cols <- length(colnames(cframe))
-    cframe <- cbind(cframe,
-                              grepl(uniques[i],cframe[, y]))
-    colnames(cframe)[cols+1] <- gsub(" ","_",uniques[i])
-  }
-  return(cframe)
-}
 
 
 unique_actors <- get_uniques(movies_imdb_prod$Actors)
