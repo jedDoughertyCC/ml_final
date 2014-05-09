@@ -49,6 +49,53 @@ movies_imdb_prod <- merge(movies_imdb,prod_numbers_lim, by.x = "Title", by.y = "
 # Filters out accidental other matches
 movies_imdb_prod <- movies_imdb_prod[movies_imdb_prod$Type == "movie",]
 
+
+movies_imdb_prod$Genre <- gsub("N/A","Not Available",movies_imdb_prod$Genre)
+# Finding the list of unique names
+#gets list of all names into a column
+
+get_uniques <- function(x){
+  names_all<- x
+  names_all <- paste(names_all,collapse = ", ")
+  names_df <- data.frame(strsplit(names_all,", "))
+  names(names_df) <- "names"
+  unique_names <- unique(names_df$names)
+  return(unique_names)
+}
+
+add_columns <- function(y,uniques,df){
+  cframe <- df
+  for(i in 1:length(uniques)) {
+    cols <- length(colnames(cframe))
+    cframe <- cbind(cframe,
+                              grepl(uniques[i],cframe[, y]))
+    colnames(cframe)[cols+1] <- gsub(" ","_",uniques[i])
+  }
+  return(cframe)
+}
+
+
+unique_actors <- get_uniques(movies_imdb_prod$Actors)
+
+movies_imdb_prod <- add_columns("Actors",unique_actors,movies_imdb_prod)
+
+unique_genres <- get_uniques(movies_imdb_prod$Genre)
+
+movies_imdb_prod <- add_columns("Genre",unique_genres,movies_imdb_prod)
+
+# actor_names <- movies_imdb_prod$Actors
+# actor_names <- paste(actor_names,collapse = ", ")
+# actors <- data.frame(strsplit(actor_names,", "))
+# names(actors) <- "names"
+# unique_names <- unique(actors$names)
+
+# for(i in 1:length(unique_names)) {
+  # cols <- length(colnames(movies_imdb_prod))
+  # movies_imdb_prod <- cbind(movies_imdb_prod,
+                            # grepl(unique_names[i],movies_imdb_prod$Actors))
+  # colnames(movies_imdb_prod)[cols+1] <- gsub(" ","_",unique_names[i])
+# }
+
 #Uncomment to reread from IMDB api
 # names <- gsub(" ","+",prod_numbers_lim$Movie)
 # titles <- data.frame()
@@ -66,3 +113,5 @@ movies_imdb_prod <- movies_imdb_prod[movies_imdb_prod$Type == "movie",]
 # }
 
 # write.csv(titles,"movies_imdb.csv",row.names = FALSE)
+
+
