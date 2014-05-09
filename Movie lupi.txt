@@ -1,3 +1,12 @@
-features: genre, writer, cast, director, release date(quarter), # of other movies released at the same time
+features:
+genre,
+writer,
+cast,
+director,
+release date(quarter),
+# of other movies released at the same time
 
 response: profit 1 year out
+
+Data Collection Steps:
+Beautiful Soup to pull data
