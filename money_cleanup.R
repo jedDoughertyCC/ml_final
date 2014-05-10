@@ -6,7 +6,7 @@
 ########################
 library(RCurl)
 library(rjson)
-
+library(sqldf)
 prod_numbers <- read.csv("prod_numbers.txt",sep = ";")
 
 # Reads in movie information from imdb csv file
@@ -65,7 +65,10 @@ prod_numbers$gain_loss <- (prod_numbers$worldwide_raw - prod_numbers$budget_raw)
 prod_numbers$Release.Date <- as.Date(prod_numbers$Release.Date,format='%m/%d/%Y')
 
 #calculates the number of other movies being released in the same time frame
-aggregate(prod_numbers,
+releases_by_week <- aggregate(Movie ~ floor_date(Release.Date,"week"),
+                              data = prod_numbers,
+                              FUN = length)
+
 
 
 #first calculates how many times each date appears
@@ -98,6 +101,18 @@ movies_imdb_prod <- add_columns("Actors",unique_actors,movies_imdb_prod)
 unique_genres <- get_uniques(movies_imdb_prod$Genre)
 movies_imdb_prod <- add_columns("Genre",unique_genres,movies_imdb_prod)
 
+# data frame of actors, movies, release dates, and earnings
+actors_df <- movies_imdb_prod[,c("Title","Actors","worldwide_raw",
+                                 "earnings_ratio","Release.Date")]
+
+unique_actors_df <- data.frame(unique_actors)
+actor_movie_combo <- sqldf("
+                          SELECT * from
+                          unique_actors_df
+                          join actors_df on
+                          Actors like
+                          ('%' ||unique_actors ||'%');
+                          ",drv = "SQLite")
 # Writes output file to csv
 write.csv(movies_imdb_prod,"data_with_booleans.csv", row.names = FALSE)
 
