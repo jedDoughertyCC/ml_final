@@ -9,6 +9,10 @@ library(rjson)
 
 prod_numbers <- read.csv("prod_numbers.txt",sep = ";")
 
+# Reads in movie information from imdb csv file
+movies_imdb <- read.csv("movies_imdb.csv",stringsAsFactors = FALSE)
+
+#converts dollars to numbers
 dollar_converter <- function(x){
   converted <- as.numeric(gsub(",","",gsub("\\$","",x)))
   return(converted)
@@ -24,13 +28,13 @@ get_uniques <- function(x){
   return(unique_names)
 }
 
-#gets boolean for each column
+#gets boolean for each new column
 add_columns <- function(y,uniques,df){
   cframe <- df
   for(i in 1:length(uniques)) {
     cols <- length(colnames(cframe))
     cframe <- cbind(cframe,
-                              grepl(uniques[i],cframe[, y]))
+                              as.numeric(grepl(uniques[i],cframe[, y])))
     colnames(cframe)[cols+1] <- gsub(" ","_",uniques[i])
   }
   return(cframe)
@@ -53,51 +57,58 @@ prod_numbers$big_money <- prod_numbers$worldwide_raw > prod_numbers$budget_raw*3
 #calculates the earnings ratio of each movie
 prod_numbers$earnings_ratio <- prod_numbers$worldwide_raw/prod_numbers$budget_raw
 
+#calculates the gain or loss percentage of each movie
+prod_numbers$gain_loss <- (prod_numbers$worldwide_raw - prod_numbers$budget_raw)/prod_numbers$budget_raw
+
+
 #reformat date
 prod_numbers$Release.Date <- as.Date(prod_numbers$Release.Date,format='%m/%d/%Y')
 
+#calculates the number of other movies being released in the same time frame
 
-prod_numbers_lim <- prod_numbers[prod_numbers$Release.Date < as.Date("2014-01-01"),]
+#first calculates how many times each date appears
+dates <- prod_numbers$Release.Date
+
+#reformats dates to date field
+#and removes films that did not make money
+prod_numbers_lim <- prod_numbers[prod_numbers$Release.Date < as.Date("2014-01-01") &
+                                 prod_numbers$Release.Date >= as.Date("2000-01-01"),]
 prod_numbers_lim <- prod_numbers[prod_numbers$domestic_raw > 1 &
                                  prod_numbers$worldwide_raw > 1, ]
 
-# Reads in movie information from imdb csv file
-movies_imdb <- read.csv("movies_imdb.csv",stringsAsFactors = FALSE)
 
-# Merges with production Information
+# Merges movie information with production Information
 movies_imdb_prod <- merge(movies_imdb,prod_numbers_lim, by.x = "Title", by.y = "Movie")
 
-# Filters out accidental other matches
+# Filters out accidental non-movie matches
 movies_imdb_prod <- movies_imdb_prod[movies_imdb_prod$Type == "movie",]
 
+<<<<<<< HEAD
 #Renames N/A to a valid column name
+=======
+>>>>>>> b75a820ec089e7b96237dbc304c6f1468ad52bd9
 movies_imdb_prod$Genre <- gsub("N/A","Not Available",movies_imdb_prod$Genre)
+
 # Finding the list of unique names
 #gets list of all names into a column
 
-
-
+# Gets list of actors and checks if they are in each movie
 unique_actors <- get_uniques(movies_imdb_prod$Actors)
-
 movies_imdb_prod <- add_columns("Actors",unique_actors,movies_imdb_prod)
 
+# Gets list of genres and checks if they apply to each movie
 unique_genres <- get_uniques(movies_imdb_prod$Genre)
-
 movies_imdb_prod <- add_columns("Genre",unique_genres,movies_imdb_prod)
 
-# actor_names <- movies_imdb_prod$Actors
-# actor_names <- paste(actor_names,collapse = ", ")
-# actors <- data.frame(strsplit(actor_names,", "))
-# names(actors) <- "names"
-# unique_names <- unique(actors$names)
+# Writes output file to csv
+write.csv(movies_imdb_prod,"data_with_booleans.csv", row.names = FALSE)
 
-# for(i in 1:length(unique_names)) {
-  # cols <- length(colnames(movies_imdb_prod))
-  # movies_imdb_prod <- cbind(movies_imdb_prod,
-                            # grepl(unique_names[i],movies_imdb_prod$Actors))
-  # colnames(movies_imdb_prod)[cols+1] <- gsub(" ","_",unique_names[i])
-# }
 
+
+# writes simplified output file to csv
+
+
+# 
 #Uncomment to reread from IMDB api
 # names <- gsub(" ","+",prod_numbers_lim$Movie)
 # titles <- data.frame()
