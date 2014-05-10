@@ -70,7 +70,7 @@ movies_imdb_prod <- merge(movies_imdb,prod_numbers_lim, by.x = "Title", by.y = "
 # Filters out accidental other matches
 movies_imdb_prod <- movies_imdb_prod[movies_imdb_prod$Type == "movie",]
 
-
+#Renames N/A to a valid column name
 movies_imdb_prod$Genre <- gsub("N/A","Not Available",movies_imdb_prod$Genre)
 # Finding the list of unique names
 #gets list of all names into a column
