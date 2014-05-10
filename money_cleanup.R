@@ -65,6 +65,8 @@ prod_numbers$gain_loss <- (prod_numbers$worldwide_raw - prod_numbers$budget_raw)
 prod_numbers$Release.Date <- as.Date(prod_numbers$Release.Date,format='%m/%d/%Y')
 
 #calculates the number of other movies being released in the same time frame
+aggregate(prod_numbers,
+
 
 #first calculates how many times each date appears
 dates <- prod_numbers$Release.Date
