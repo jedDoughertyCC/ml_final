@@ -195,7 +195,7 @@ movies_imdb_prod$domestic_raw <- NULL
 # movies_imdb_prod$big_money <- NULL
 movies_imdb_prod$break_even <- NULL
 movies_imdb_prod$imdbID <- NULL
-movies_imdb_prod$imdbRating <- NULL
+# movies_imdb_prod$imdbRating <- NULL
 movies_imdb_prod$earnings_ratio <- NULL
 
 movies_imdb_prod <- unique(movies_imdb_prod)
@@ -209,7 +209,7 @@ print(summary(tt))
 
 
 # Writes output file to csv
-# write.csv(movies_imdb_prod,"data_with_booleans.csv", row.names = FALSE)
+write.csv(movies_imdb_prod,"data_with_booleans.csv", row.names = FALSE)
 
 #Uncomment to reread from IMDB api
 # names <- gsub(" ","+",prod_numbers_lim$Movie)
