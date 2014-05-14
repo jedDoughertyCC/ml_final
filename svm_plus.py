@@ -12,7 +12,7 @@ with open('data_with_booleans.csv', 'rb') as csvfile:
 data_with_booleans = np.asarray(data_with_booleans)
 
 #find indices
-y_index = names.index('earnings_ratio')
+y_index = names.index('big_money')
 priv_index = names.index('imdbRating')
 genre_start_index = names.index('Comedy')
 budget_index = names.index('budget_raw')

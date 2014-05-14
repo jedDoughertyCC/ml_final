@@ -99,7 +99,6 @@ prod_numbers[prod_numbers$break_even == 0,]$break_even = -1
 prod_numbers$big_money <- as.numeric(prod_numbers$worldwide_raw > prod_numbers$budget_raw*2)
 prod_numbers[prod_numbers$big_money == 0,]$big_money = -1
 
-
 #calculates the earnings ratio of each movie
 prod_numbers$earnings_ratio <- prod_numbers$worldwide_raw/prod_numbers$budget_raw
 
@@ -118,11 +117,10 @@ releases_by_week <- aggregate(Movie ~ floor_date(Release.Date,"week"),
 
 #reformats dates to date field
 #and removes films that did not make money
-prod_numbers_lim <- prod_numbers[prod_numbers$Release.Date < as.Date("2014-01-01") &
+prod_numbers_lim <- prod_numbers[prod_numbers$Release.Date < as.Date("2010-01-01") &
                                  prod_numbers$Release.Date >= as.Date("2000-01-01"),]
 prod_numbers_lim <- prod_numbers_lim[prod_numbers_lim$domestic_raw > 1 &
                                  prod_numbers_lim$worldwide_raw > 1, ]
-
 
 #identify nas in movies database
 #In Genre we want to replace na with a text field
@@ -145,15 +143,14 @@ movies_imdb$Type       <- NULL
 movies_imdb$Response   <- NULL
 movies_imdb            <- na.omit(movies_imdb)
 movies_imdb$Year       <- as.numeric(movies_imdb$Year)
-movies_imdb            <- movies_imdb[movies_imdb$Year > 2000,]
+movies_imdb            <- movies_imdb[movies_imdb$Year > 1999,]
+movies_imdb            <- movies_imdb[movies_imdb$Year < 2010,]
 movies_imdb$imdbVotes  <- NULL
 movies_imdb$imdbRating <- as.numeric(movies_imdb$imdbRating)
 # Merges movie information with production information
 movies_imdb_prod <- merge(movies_imdb,prod_numbers_lim,
                           by.x = "Title",
                           by.y = "Movie")
-
-# Filters out accidental non-movie matches
 
 # Clean up specific stuff at the end of the writer column
 
