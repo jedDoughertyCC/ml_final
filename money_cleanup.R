@@ -116,7 +116,7 @@ releases_by_week <- aggregate(Movie ~ floor_date(Release.Date,"week"),
 #reformats dates to date field
 #and removes films that did not make money
 prod_numbers_lim <- prod_numbers[prod_numbers$Release.Date < as.Date("2014-01-01") &
-                                 prod_numbers$Release.Date >= as.Date("1970-01-01"),]
+                                 prod_numbers$Release.Date >= as.Date("2000-01-01"),]
 prod_numbers_lim <- prod_numbers_lim[prod_numbers_lim$domestic_raw > 1 &
                                  prod_numbers_lim$worldwide_raw > 1, ]
 
@@ -142,7 +142,7 @@ movies_imdb$Type       <- NULL
 movies_imdb$Response   <- NULL
 movies_imdb            <- na.omit(movies_imdb)
 movies_imdb$Year       <- as.numeric(movies_imdb$Year)
-movies_imdb            <- movies_imdb[movies_imdb$Year > 1970,]
+movies_imdb            <- movies_imdb[movies_imdb$Year > 2000,]
 movies_imdb$imdbVotes  <- NULL
 movies_imdb$imdbRating <- as.numeric(movies_imdb$imdbRating)
 # Merges movie information with production information

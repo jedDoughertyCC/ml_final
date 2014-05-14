@@ -2,7 +2,7 @@ library(e1071)
 library(plyr)
 
 
-
+source("money_cleanup.R")
 #reads in the csv of movie data
 movie_data <- read.csv("data_with_booleans.csv")
 
@@ -24,8 +24,8 @@ trainset <- movie_data[-testindex,]
 #creates support vector machine from the data
 svm.movies <- svm(big_money ~ .,
                   data = trainset,
-                  cost = 500,
-                  gamma = 1)
+                  cost = 10,
+                  gamma = .8)
 
 
 #Predicts test set based on svm
@@ -38,4 +38,4 @@ confusion_mat <- table(pred = svm.pred, true = testset[,4])
 
 
 print(summary(svm.pred))
-print(confusion_mat)
+print(summary(confusion_mat))
