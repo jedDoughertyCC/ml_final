@@ -93,9 +93,12 @@ prod_numbers$domestic_raw <- dollar_converter(prod_numbers$Domestic.Gross)
 
 #calculates whether each movie broke even
 prod_numbers$break_even <- as.numeric(prod_numbers$worldwide_raw > prod_numbers$budget_raw)
+prod_numbers[prod_numbers$break_even == 0,]$break_even = -1
 
 #calculates whether each movie was a big earner
 prod_numbers$big_money <- as.numeric(prod_numbers$worldwide_raw > prod_numbers$budget_raw*2)
+prod_numbers[prod_numbers$big_money == 0,]$big_money = -1
+
 
 #calculates the earnings ratio of each movie
 prod_numbers$earnings_ratio <- prod_numbers$worldwide_raw/prod_numbers$budget_raw
@@ -190,8 +193,8 @@ movies_imdb_prod$Worldwide.Gross <- NULL
 movies_imdb_prod$gain_loss <- NULL
 
 #zeroing out output variables
-movies_imdb_prod$worldwide_raw <- NULL
-movies_imdb_prod$domestic_raw <- NULL
+# movies_imdb_prod$worldwide_raw <- NULL
+# movies_imdb_prod$domestic_raw <- NULL
 # movies_imdb_prod$big_money <- NULL
 movies_imdb_prod$break_even <- NULL
 movies_imdb_prod$imdbID <- NULL
@@ -199,11 +202,6 @@ movies_imdb_prod$imdbID <- NULL
 movies_imdb_prod$earnings_ratio <- NULL
 
 movies_imdb_prod <- unique(movies_imdb_prod)
-
-tt <- glm(big_money ~ ., data = movies_imdb_prod, family = "binomial")
-
-print(exp(cbind(OR = coef(tt), confint(tt))))
-print(summary(tt))
 
 
 

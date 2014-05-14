@@ -75,5 +75,3 @@ def obj_func(x,y,x_priv,alpha,beta,gamma = 1):
 	
 value = obj_func(K, y, K_priv, alpha, beta)
 print value
-
-
