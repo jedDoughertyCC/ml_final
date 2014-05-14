@@ -14,24 +14,17 @@ data_with_booleans = np.asarray(data_with_booleans)
 data_with_booleans = data_with_booleans[:10]
 
 #find indices
-y_index = names.index('earnings_ratio')
+y_index = names.index('big_money')
 priv_index = names.index('imdbRating')
 genre_start_index = names.index('Comedy')
 budget_index = names.index('budget_raw')
-er_index = names.index('earnings_ratio')
 
 
 #remove strings
 data_with_booleans = data_with_booleans[data_with_booleans[:,priv_index] != 'N/A']
 
-#build inputs
-y = []
-for i in range(len(data_with_booleans)):
-	if np.array(data_with_booleans[i,y_index]).astype(float) > 2:
-		y.append(1)
-	else:
-		y.append(0)
-y = np.asarray(y)
+#get model data
+y = np.float32(np.asarray(data_with_booleans[:,y_index]))
 x_priv = np.float32(data_with_booleans[:,priv_index])
 
 #build x matrix
@@ -82,3 +75,5 @@ def obj_func(x,y,x_priv,alpha,beta,gamma = 1):
 	
 value = obj_func(K, y, K_priv, alpha, beta)
 print value
+
+
