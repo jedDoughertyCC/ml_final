@@ -121,26 +121,24 @@ class SMO:
     eta = 2 * k12 - k11 - k22
     etb = 2 * k12_priv - k11_priv - k22_priv
     if eta < 0 :
+      
       # minimum exists between L and H
-      a2 = alph2 - y2*(E1-E2)/eta
-      a2 = max(min(a2, H), L)
-      b2 = beta1 - y2*(E1-E2)/etb
-      b2 = max(min(b2, H), L)
+      try:
+          a2 = alph2 - y2*(E1-E2)/eta
+          a2 = max(min(a2, H), L)
+      except:
+          a2 = alph2
+      try:
+          b2 = beta1 - y2*(E1-E2)/etb
+          b2 = max(min(b2, H), L)
+      except:
+          b2 = beta1
     else:
       # evaluate objective function at a2 = L and a2 = H
       v1 = self._evalExample(i1) + self.b - alph1 * y1 * k11 - alph2 * y2 * k12
       v2 = self._evalExample(i2) + self.b - alph1 * y1 * k12 - alph2 * y2 * k22
       gamma = alph1 + s * alph2
-      print alph1
-      print L
-      print H
-      print i1
-      print i2
-      print v1
-      print v2
-      print s
-      print beta1
-      print beta2
+
       Lobj = self._getObj(alph1, L, i1, i2, v1, v2, s, beta1, beta2)
       Hobj = self._getObj(alph1, H, i1, i2, v1, v2, s, beta1, beta2)
       if Lobj > Hobj + eps:
@@ -194,12 +192,13 @@ class SMO:
     # success!
     return True
 
-  def _getObj(a1, a2, i1, i2, v1, v2, s, b1, b2):
+  def _getObj(a1, a2, i1, i2, v1, v2, s, b1, b2, *args):
     # compute the objective function at a1 and a2
     # other parameters passed for convenience
-	
+    a1 = np.array(a1).astype(float)
+    
 	#added correcting functions
-    w = a1 + a2 - .5 * a1**2 * self.kcache[i1][i1] - .5*(a1 + b1 - C)* (a1 + b1 - C) * self.kcache_priv[i1][i1] 
+    w = a1 + a2 - .5 * a1**2 * self.kcache[i1][i1] - .5*(a1 + b1 - C) * (a1 + b1 - C) * self.kcache_priv[i1][i1] 
     w += -.5 * a2**2 * self.kcache[i2][i2] - .5 * (a2 + b2 - C) * (a2 + b2 - C) * self.kcache_priv[i2][i2]
     w += -s * a1 * a2 * self.kcache[i1][i2] -s * (a1 + b1 - C) * (a2 + b2 - C) * self.kcache_priv[i1][i2]
     w += -a1 * self.ex_labels[i1] * v1 #?
