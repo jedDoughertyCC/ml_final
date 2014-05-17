@@ -106,8 +106,8 @@ class SMO:
     E1 = self._getError(i1)
     E2 = self._getError(i2)
     s = y1 * y2
-    L = max(0, alph2 - alph1 + beta2 - beta1)   				#not sure if i need to update
-    H = min(self.C, alph2 - alph1 + beta2 - beta1 + self.C)		#not sure if i need to update
+    L = max(0, alph2 - alph1 + beta2 - beta1)           #not sure if i need to update
+    H = min(self.C, alph2 - alph1 + beta2 - beta1 + self.C)    #not sure if i need to update
     k11 = self.kcache[i1][i1]
     k12 = self.kcache[i1][i2]
     k22 = self.kcache[i2][i2]
@@ -121,7 +121,6 @@ class SMO:
     eta = 2 * k12 - k11 - k22
     etb = 2 * k12_priv - k11_priv - k22_priv
     if eta < 0 :
-      
       # minimum exists between L and H
       try:
           a2 = alph2 - y2*(E1-E2)/eta
@@ -162,8 +161,8 @@ class SMO:
 
     # get new alpha 1 value
     a1 = alph1 + s*(alph2 - a2)
-	
-	# get new beta 1 val
+  
+  # get new beta 1 val
     b1 = beta1 + s*(beta2 - b2)
 
     # update bias
