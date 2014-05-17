@@ -1,4 +1,4 @@
-# svmplot.py
+# svm_test.py
 # Bill Waldrep, December 2012
 #
 # Utility functions for running/testing the svm
@@ -27,10 +27,10 @@ with open('data_with_booleans.csv', 'rb') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     names = next(reader, None)
     for row in reader:
-		data_with_booleans.append(row)
+        data_with_booleans.append(row)
 
 data_with_booleans = np.asarray(data_with_booleans)
-data_with_booleans = data_with_booleans[:100]
+data_with_booleans = data_with_booleans[:70]
 
 #find indices
 y_index = names.index('big_money')

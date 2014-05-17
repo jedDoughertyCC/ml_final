@@ -1,7 +1,7 @@
 # smo.py
 # Bill Waldrep, December 2012
-#	modified by Devin Jones and Jed Dougherty
-#	for SVM+
+#  modified by Devin Jones and Jed Dougherty
+#  for SVM+
 # Sequential Minimal Optimization
 
 # numerical computing
@@ -26,10 +26,10 @@ class SMO:
 
     # initialize array of alphas
     self.alphas = np.zeros(len(X))
-	
-	#initialize array of betas
+  
+  #initialize array of betas
     self.betas = np.zeros(len(X))  #added betas here
-	
+  
     # initialize error and kernel caches
     self.errors = np.zeros(len(X))
     print "evaluating kernel cache"
@@ -106,22 +106,21 @@ class SMO:
     E1 = self._getError(i1)
     E2 = self._getError(i2)
     s = y1 * y2
-    L = max(0, alph2 - alph1 + beta2 - beta1)   				#not sure if i need to update
-    H = min(self.C, alph2 - alph1 + beta2 - beta1 + self.C)		#not sure if i need to update
+    L = max(0, alph2 - alph1 + beta2 - beta1)           #not sure if i need to update
+    H = min(self.C, alph2 - alph1 + beta2 - beta1 + self.C)    #not sure if i need to update
     k11 = self.kcache[i1][i1]
     k12 = self.kcache[i1][i2]
     k22 = self.kcache[i2][i2]
     k11_priv = self.kcache_priv[i1][i1]
     k12_priv = self.kcache_priv[i1][i2]
-    k22_priv = self.kcache_priv[i2][i2]	
-	
-	
+    k22_priv = self.kcache_priv[i2][i2]  
+  
+  
     if L == H:
       return False
     eta = 2 * k12 - k11 - k22
     etb = 2 * k12_priv - k11_priv - k22_priv
     if eta < 0 :
-      
       # minimum exists between L and H
       try:
           a2 = alph2 - y2*(E1-E2)/eta
@@ -162,8 +161,8 @@ class SMO:
 
     # get new alpha 1 value
     a1 = alph1 + s*(alph2 - a2)
-	
-	# get new beta 1 val
+  
+  # get new beta 1 val
     b1 = beta1 + s*(beta2 - b2)
 
     # update bias
@@ -184,7 +183,7 @@ class SMO:
     # update alphas
     self.alphas[i1] = a1
     self.alphas[i2] = a2
-	
+  
     # update betas
     self.betas[i1] = b1
     self.betas[i2] = b2
@@ -192,15 +191,14 @@ class SMO:
     # success!
     return True
 
-  def _getObj(a1, a2, i1, i2, v1, v2, s, b1, b2, *args):
+  def _getObj(self, a1, a2, i1, i2, v1, v2, s, b1, b2, *args):
     # compute the objective function at a1 and a2
     # other parameters passed for convenience
     a1 = np.array(a1).astype(float)
-    
-	#added correcting functions
-    w = a1 + a2 - .5 * a1**2 * self.kcache[i1][i1] - .5*(a1 + b1 - C) * (a1 + b1 - C) * self.kcache_priv[i1][i1] 
-    w += -.5 * a2**2 * self.kcache[i2][i2] - .5 * (a2 + b2 - C) * (a2 + b2 - C) * self.kcache_priv[i2][i2]
-    w += -s * a1 * a2 * self.kcache[i1][i2] -s * (a1 + b1 - C) * (a2 + b2 - C) * self.kcache_priv[i1][i2]
+    #added correcting functions
+    w = a1 + a2 - .5 * a1**2 * self.kcache[i1][i1] - .5*(a1 + b1 - self.C) * (a1 + b1 - self.C) * self.kcache_priv[i1][i1]
+    w += -.5 * a2**2 * self.kcache[i2][i2] - .5 * (a2 + b2 - self.C) * (a2 + b2 - self.C) * self.kcache_priv[i2][i2]
+    w += -s * a1 * a2 * self.kcache[i1][i2] -s * (a1 + b1 - self.C) * (a2 + b2 - self.C) * self.kcache_priv[i1][i2]
     w += -a1 * self.ex_labels[i1] * v1 #?
     w += -a2 * self.ex_labels[i2] * v2 #?
     w += 0 #const
@@ -248,5 +246,4 @@ class SMO:
         if i <= j:
           self.kcache_priv[i][j] = self.k.eval(self.x_priv[i], self.x_priv[j])
         else:
-          self.kcache_priv[i][j] = self.kcache[j][i]		  
-		  
+          self.kcache_priv[i][j] = self.kcache_priv[j][i]
