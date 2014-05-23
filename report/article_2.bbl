@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{Boser:1992:TAO:130385.130401}
+Bernhard~E. Boser, Isabelle~M. Guyon, and Vladimir~N. Vapnik.
+\newblock A training algorithm for optimal margin classifiers.
+\newblock pages 144--152, 1992.
+
+\bibitem{Vapnik2009544}
+Vladimir Vapnik and Akshay Vashist.
+\newblock A new learning paradigm: Learning using privileged information.
+\newblock {\em Neural Networks}, 22(5--6):544 -- 557, 2009.
+
+\end{thebibliography}

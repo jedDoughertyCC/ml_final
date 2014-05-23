@@ -1,0 +1,9 @@
+@article{Vapnik2009544,
+	Author = {Vladimir Vapnik and Akshay Vashist},
+	Journal = {Neural Networks},
+	Number = {5--6},
+	Pages = {544 - 557},
+	Title = {A new learning paradigm: Learning using privileged information},
+	Volume = {22},
+	Year = {2009}}
+
